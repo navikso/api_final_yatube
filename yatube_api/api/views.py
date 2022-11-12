@@ -8,7 +8,6 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAuthenticated
 )
-# from rest_framework.response import Response
 
 from posts.models import Group, Post, Follow
 from .permissions import IsAuthorOrReadOnly
@@ -29,15 +28,6 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = LimitOffsetPagination
-
-    # def get(self, request):
-    #     queryset = self.get_queryset()
-    #     serializer = PostSerializer(queryset, many=True)
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = PostSerializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-    #     return Response({'posts': serializer.data})
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -95,15 +85,3 @@ class FollowViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-# class FollowViewSet(viewsets.ModelViewSet):
-#     queryset = Follow.objects.all()
-#     serializer_class = FollowSerializer
-#     permission_classes = (IsAuthenticated, )
-
-#     def get_queryset(self):
-#         return self.request.user.follower.all()
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
